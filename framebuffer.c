@@ -58,7 +58,7 @@ void SetPixel(int x, int y, Color32 color){
 	long int location = 0;
 	location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+vinfo.yoffset) * finfo.line_length;
 	if(location >= 0 && location < screensize && color.a != 0){
-		*((uint32_t*)(bbp + location)) = (color.r<<vinfo.red.offset) | (color.g<<vinfo.green.offset) | (color.b<<vinfo.blue.offset) | (color.a<<vinfo.transp.offset);
+		*((uint32_t*)(bbp + location)) = (color.r<<vinfo.red.offset) | (color.g<<vinfo.green.offset) | (color.b<<vinfo.blue.offset);
 	} else {
 		//Out of bound
 	}
