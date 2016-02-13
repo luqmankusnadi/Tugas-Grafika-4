@@ -8,8 +8,11 @@
 int main(){
 	
 	InitFramebuffer();
-	Image spaceshipImage = LoadBitmapAsImage("spaceship.bmp");
+	// Image spaceshipImage = LoadBitmapAsImage("spaceship.bmp");
+	Image parachuteImage = LoadBitmapAsImage("parachute.bmp");
+	parachuteImage.pivot.y = 0;
 	Image backgroundImage = LoadBitmapAsImage("background.bmp");
+
 	int rot = 0;
 	int i;
 	
@@ -17,13 +20,13 @@ int main(){
 		ClearScreen();
 		rot = ((rot+13)%361);
 		DrawImage(1024/2, 768/2, &backgroundImage, 1.0f, 0);
-		DrawImage(300,300, &spaceshipImage, (float)i/100.0f, rot);
+		DrawImage(300,300, &parachuteImage, (float)i/100.0f, rot);
 		DrawLine(0,0, 700, 600, (Color32){255,0,0,255});
 		SwapBuffers();
 		
 		usleep(33333);
 	}
-	FreeImage(&spaceshipImage);
+	FreeImage(&parachuteImage);
 	FreeImage(&backgroundImage);
 	CloseFramebuffer();
 	return 0;
