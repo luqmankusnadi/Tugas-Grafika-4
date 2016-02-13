@@ -12,6 +12,7 @@ int main(){
 	Image parachuteImage = LoadBitmapAsImage("parachute.bmp");
 	parachuteImage.pivot.y = 0;
 	Image backgroundImage = LoadBitmapAsImage("background.bmp");
+	Image rocketImage = LoadBitmapAsImage("rocket.bmp");
 
 	int rot = 0;
 	int rot_offset = 6;
@@ -31,6 +32,7 @@ int main(){
 		}
 		DrawImage(1024/2, 768/2, &backgroundImage, 1.0f, 0);
 		DrawImage(300,y_parachute += y_parachute_offset, &parachuteImage, 0.5f, rot);
+		DrawImage(backgroundImage.w/2, backgroundImage.h, &rocketImage, 1.0f, rot);
 		DrawLine(0,0, 700, 600, (Color32){255,0,0,255});
 		SwapBuffers();
 		usleep(33333);
