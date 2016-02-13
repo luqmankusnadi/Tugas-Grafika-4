@@ -104,7 +104,6 @@ void DrawImage(int x, int y, const Image *image, float scale, float rotation){
 	}
 }
 
-
 /*
 void DrawBitmap(int x, int y, const BitmapFile *bitmapFile){
 	int i,j;

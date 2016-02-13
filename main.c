@@ -15,12 +15,11 @@ int main(){
 	
 	for(i=0; i < 10000; i++){
 		ClearScreen();
-		rot = ((rot+13)%361);
+		rot = ((rot+10)%360);
 		DrawImage(1024/2, 768/2, &backgroundImage, 1.0f, 0);
 		DrawImage(300,300, &spaceshipImage, (float)i/100.0f, rot);
 		DrawLine(0,0, 700, 600, (Color32){255,0,0,255});
 		SwapBuffers();
-		
 		usleep(33333);
 	}
 	FreeImage(&spaceshipImage);
