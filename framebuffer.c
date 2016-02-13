@@ -104,6 +104,10 @@ void DrawImage(int x, int y, const Image *image, float scale, float rotation){
 	}
 }
 
+void DrawGameObject(const GameObject* gameobject){
+
+}
+
 
 /*
 void DrawBitmap(int x, int y, const BitmapFile *bitmapFile){
