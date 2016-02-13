@@ -28,7 +28,6 @@ int main(){
 		DrawImage(300,300, &parachuteImage, (float)i/100.0f, rot);
 		DrawLine(0,0, 700, 600, (Color32){255,0,0,255});
 		SwapBuffers();
-		
 		usleep(33333);
 	}
 	FreeImage(&parachuteImage);

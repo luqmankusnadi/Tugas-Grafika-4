@@ -14,6 +14,7 @@
 #include "color32.h"
 #include "bitmap.h"
 #include "image.h"
+#include "gameobject.h"
 
 int fbfd;
 struct fb_var_screeninfo vinfo;
