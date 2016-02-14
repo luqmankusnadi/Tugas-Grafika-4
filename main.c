@@ -22,14 +22,17 @@ int main(){
 	int rocket_offset = 6;
 	int rot_max = 50;
 	int y_parachute = 300;
+	int y_parachute2 = 300;
 	int y_parachute_offset = 10;
 	int i;
 	
 	//Missile Variable
 	int missile_launched = 0;
-	// int missile_offset = 5;
-	// int missile_x;
-	// int missile_y;
+	int missile_offset = 15;
+	int missile_x = backgroundImage.w/2;
+	int missile_y = backgroundImage.h;
+	float missile_scale = 0;
+	int missile_rotation = 0;
 
 	set_conio_terminal_mode();
 
@@ -43,18 +46,19 @@ int main(){
 			rot_offset *=  -1;
 		}
 
-		// if (missile_launched == 1){
-		// 	DrawImage(missile_x,missile_y -= missile_offset , &missileImage, 0.5f, 0);
-		// 	if (missile_y <= 0){
-		// 		missile_launched = 0;
-		// 		printf("Not Launcehd");
-		// 	}			
-		// }
-
 
 		DrawImage(1024/2, 768/2, &backgroundImage, 1.0f, 0);
 		DrawImage(300,y_parachute += y_parachute_offset, &parachuteImage, 0.5f, rot);
 		DrawImage(backgroundImage.w/2, backgroundImage.h, &rocketImage, 1.0f, rocket_rot);
+
+		if (missile_launched == 1){
+			DrawImage(missile_x,missile_y -= missile_offset, &rocketImage, 1.0f, 0);			
+		}
+		if (missile_y < 0){
+			// missile_launched = 0;
+			missile_y = backgroundImage.h;
+		}
+
 		DrawLine(0,0, 700, 600, (Color32){255,0,0,255});
 		if(kbhit()){
 			char c = getch();
@@ -77,10 +81,6 @@ int main(){
 			}
 			else if(c == 'z'){
 				missile_launched = 1;
-				// missile_x = 300;
-				// missile_y = 200;
-				// printf("Rocket Launched %d" , missile_launched);
-				// DrawImage(300,200, &missileImage, 0.5f, rot);				
 			}
 
 			else if (c == 'x'){
