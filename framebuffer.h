@@ -30,7 +30,7 @@ void ClearScreen();
 void SetPixel(int x, int y, Color32 color);
 void DrawLine(int x0, int y0, int x1, int y1, Color32 color);
 void DrawImage(int x, int y, const Image *image, float scale, float rotation);
-void DrawGameObject(const GameObject* gameobject);
+void DrawGameObject(const GameObject* go);
 /*
 void DrawBitmap(int x, int y, const BitmapFile *bitmapFile);
 void DrawSubBitmap(int x, int y, const BitmapFile *bitmapFile, int offsetX, int offsetY, int width, int height);

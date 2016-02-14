@@ -14,6 +14,8 @@ int main(){
 	parachuteImage.pivot.y = 0;
 	Image backgroundImage = LoadBitmapAsImage("background.bmp");
 
+	
+	
 	int rot = 0;
 	int rot_offset = 6;
 	int rot_max = 50;
@@ -24,6 +26,7 @@ int main(){
 
 	for(i=0; i < 10000; i++){
 		ClearScreen();
+		
 		rot = ((rot + rot_offset)% rot_max);
 		if (rot_max - rot < 3){
 			rot_offset *=  -1;
@@ -36,7 +39,10 @@ int main(){
 		DrawLine(0,0, 700, 600, (Color32){255,0,0,255});
 		if(kbhit()){
 			char c = getch();
-			if(c == 'w') break;
+			if(c == 'w'){
+				
+			} 
+			else if(c == 'c') break;
 		}
 		SwapBuffers();
 		usleep(33333);

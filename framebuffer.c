@@ -104,8 +104,8 @@ void DrawImage(int x, int y, const Image *image, float scale, float rotation){
 	}
 }
 
-void DrawGameObject(const GameObject* gameobject){
-
+void DrawGameObject(const GameObject* go){
+	DrawImage(go->position.x, go->position.y, go->image, go->scale, go->rotation);
 }
 
 
