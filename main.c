@@ -57,6 +57,7 @@ int main(){
 		if (missile_y < 0){
 			// missile_launched = 0;
 			missile_y = backgroundImage.h;
+			missile_launched = 0;
 		}
 
 		DrawLine(0,0, 700, 600, (Color32){255,0,0,255});
