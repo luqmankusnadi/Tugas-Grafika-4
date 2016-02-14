@@ -13,22 +13,20 @@ int missile_finished_launched(int x,int y,int width_background){
 }
 
 int main(){
-	
-	InitFramebuffer();
+	long int width, height;
+	InitFramebuffer(&width, &height);
 	// Image spaceshipImage = LoadBitmapAsImage("spaceship.bmp");
 	Image parachuteImage = LoadBitmapAsImage("parachute.bmp");
 	parachuteImage.pivot.y = 0;
 	Image backgroundImage = LoadBitmapAsImage("background.bmp");
 	Image rocketImage = LoadBitmapAsImage("rocket.bmp");
 	Image missileImage = LoadBitmapAsImage("rocket.bmp");
+	Image planeImage = LoadBitmapAsImage("plane.bmp");
 	Image propellerImage = LoadBitmapAsImage("propeller.bmp");
 
-	
-	
 	int rot = 0;
 	int rocket_rot=0;
 	int missile_rot = 0;
-	int propeller_rot = 0;
 	int rot_offset = 6;
 	int rocket_offset = 6;
 	int rot_max = 50;
@@ -36,6 +34,13 @@ int main(){
 	int y_parachute2 = 300;
 	int y_parachute_offset = 10;
 	int i;
+	
+	//Plane vars
+	float plane_scale = 1.0;
+	
+	//Propeller vars
+	int propeller_rot = 0;
+	float propeller_scale = 1.0;
 	
 	//Missile Variable
 	int missile_launched = 0;
@@ -60,9 +65,12 @@ int main(){
 
 		propeller_rot+=35;
 		propeller_rot %= 360;
-
-		DrawImage(1024/2, 768/2, &backgroundImage, 1.0f, 0);
-		DrawImage(1024/2, 768/2, &propellerImage, 1.0f, propeller_rot);
+		propeller_scale += 0.03;
+		plane_scale += 0.03;
+		
+		DrawImage(width/2, height/2, &backgroundImage, 1.0f, 0);
+		DrawImage(width/2 -25, height/2 -50, &planeImage, plane_scale, 0);
+		DrawImage(width/2, height/2, &propellerImage, propeller_scale, propeller_rot);
 		DrawImage(300,y_parachute += y_parachute_offset, &parachuteImage, 0.5f, rot);
 		DrawImage(backgroundImage.w/2, backgroundImage.h, &rocketImage, 1.0f, rocket_rot);
 

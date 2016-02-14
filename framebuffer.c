@@ -1,7 +1,7 @@
 #include "framebuffer.h"
 
 
-void InitFramebuffer(){
+void InitFramebuffer(long int *width, long int *height){
 	fbfd = open("/dev/fb0", O_RDWR);
 	if (fbfd == -1) {
 		perror("Error: cannot open framebuffer device");
@@ -22,10 +22,12 @@ void InitFramebuffer(){
 	}
  
 	printf("%dx%d, %dbpp\n", vinfo.xres, vinfo.yres, vinfo.bits_per_pixel);
- 
+	
 	// Figure out the size of the screen in bytes
 	screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
- 
+	*width = vinfo.xres;
+	*height = vinfo.yres;
+	
 	// Map the device to memory
 	fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
 	bbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, (off_t)0);
