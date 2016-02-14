@@ -14,6 +14,7 @@ int main(){
 	parachuteImage.pivot.y = 0;
 	Image backgroundImage = LoadBitmapAsImage("background.bmp");
 	Image rocketImage = LoadBitmapAsImage("rocket.bmp");
+	Image missileImage = LoadBitmapAsImage("rocket.bmp");
 
 	int rot = 0;
 	int rocket_rot=0;
@@ -23,6 +24,13 @@ int main(){
 	int y_parachute = 300;
 	int y_parachute_offset = 10;
 	int i;
+	
+	//Missile Variable
+	int missile_launched = 0;
+	// int missile_offset = 5;
+	// int missile_x;
+	// int missile_y;
+
 	set_conio_terminal_mode();
 
 	for(i=0; i < 10000; i++){
@@ -34,6 +42,16 @@ int main(){
 		else if (rot_max - rot > 97){
 			rot_offset *=  -1;
 		}
+
+		// if (missile_launched == 1){
+		// 	DrawImage(missile_x,missile_y -= missile_offset , &missileImage, 0.5f, 0);
+		// 	if (missile_y <= 0){
+		// 		missile_launched = 0;
+		// 		printf("Not Launcehd");
+		// 	}			
+		// }
+
+
 		DrawImage(1024/2, 768/2, &backgroundImage, 1.0f, 0);
 		DrawImage(300,y_parachute += y_parachute_offset, &parachuteImage, 0.5f, rot);
 		DrawImage(backgroundImage.w/2, backgroundImage.h, &rocketImage, 1.0f, rocket_rot);
@@ -41,10 +59,7 @@ int main(){
 		if(kbhit()){
 			char c = getch();
 			if(c == 'a'){
-				printf("Kiri");
-				printf("%d", rocket_rot);
 				if (rot_max - rocket_rot < 3){
-					printf("Batas");
 				}
 				else{
 					rocket_rot = ((rocket_rot - rocket_offset)% rot_max);
@@ -55,12 +70,19 @@ int main(){
 				printf("Kanan");
 				printf("%d", rocket_rot);
 				if (rot_max - rocket_rot > 97){
-					printf("Batas");
 				}else{
 					rocket_rot = ((rocket_rot + rocket_offset)% rot_max);
 				}
 
 			}
+			else if(c == 'z'){
+				missile_launched = 1;
+				// missile_x = 300;
+				// missile_y = 200;
+				// printf("Rocket Launched %d" , missile_launched);
+				// DrawImage(300,200, &missileImage, 0.5f, rot);				
+			}
+
 			else if (c == 'x'){
 				break;
 			}
