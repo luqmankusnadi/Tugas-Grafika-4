@@ -6,6 +6,12 @@
 #include "bitmap.h"
 #include "input.h"
 
+
+//Function untuk missile
+int missile_finished_launched(int x,int y,int width_background){	
+	return y < 0 || x < 0 || x > width_background;
+}
+
 int main(){
 	
 	InitFramebuffer();
@@ -18,6 +24,7 @@ int main(){
 
 	int rot = 0;
 	int rocket_rot=0;
+	int missile_rot = 0;
 	int rot_offset = 6;
 	int rocket_offset = 6;
 	int rot_max = 50;
@@ -52,12 +59,13 @@ int main(){
 		DrawImage(backgroundImage.w/2, backgroundImage.h, &rocketImage, 1.0f, rocket_rot);
 
 		if (missile_launched == 1){
-			DrawImage(missile_x,missile_y -= missile_offset, &rocketImage, 1.0f, 0);			
+			DrawImage(missile_x += missile_rot,missile_y -= missile_offset, &rocketImage, 1.0f, missile_rot);			
 		}
-		if (missile_y < 0){
-			// missile_launched = 0;
+		if (missile_finished_launched(missile_x,missile_y,backgroundImage.w) ){
+			missile_x = backgroundImage.w/2;
 			missile_y = backgroundImage.h;
 			missile_launched = 0;
+			missile_rot = rocket_rot;
 		}
 
 		DrawLine(0,0, 700, 600, (Color32){255,0,0,255});
