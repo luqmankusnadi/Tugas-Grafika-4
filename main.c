@@ -134,8 +134,12 @@ int main(){
 		SwapBuffers();
 		usleep(33333);
 	}
+	
+	//free image
 	FreeImage(&parachuteImage);
 	FreeImage(&backgroundImage);
+	FreeImage(&planeImage);
+	FreeImage(&propellerImage);
 	CloseFramebuffer();
 	return 0;
 }
