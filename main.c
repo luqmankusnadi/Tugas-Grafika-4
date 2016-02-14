@@ -21,12 +21,14 @@ int main(){
 	Image backgroundImage = LoadBitmapAsImage("background.bmp");
 	Image rocketImage = LoadBitmapAsImage("rocket.bmp");
 	Image missileImage = LoadBitmapAsImage("rocket.bmp");
+	Image propellerImage = LoadBitmapAsImage("propeller.bmp");
 
 	
 	
 	int rot = 0;
 	int rocket_rot=0;
 	int missile_rot = 0;
+	int propeller_rot = 0;
 	int rot_offset = 6;
 	int rocket_offset = 6;
 	int rot_max = 50;
@@ -56,8 +58,11 @@ int main(){
 			rot_offset *=  -1;
 		}
 
+		propeller_rot+=35;
+		propeller_rot %= 360;
 
 		DrawImage(1024/2, 768/2, &backgroundImage, 1.0f, 0);
+		DrawImage(1024/2, 768/2, &propellerImage, 1.0f, propeller_rot);
 		DrawImage(300,y_parachute += y_parachute_offset, &parachuteImage, 0.5f, rot);
 		DrawImage(backgroundImage.w/2, backgroundImage.h, &rocketImage, 1.0f, rocket_rot);
 
