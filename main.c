@@ -97,11 +97,12 @@ int main(){
 			}
 			
 		}
-		for(i = 0; i < VectorTotal(&gameObjects); i++){
+		int gameObjectCount = VectorTotal(&gameObjects);
+		for(i = 0; i < gameObjectCount; i++){
 			GameObject* gameObject = VectorGet(&gameObjects, i);
 			if(gameObject->type == 2){
 				int j;
-				for(j = 0; j < VectorTotal(&gameObjects); j++){
+				for(j = 0; j < gameObjectCount; j++){
 					GameObject* gameObject2 = VectorGet(&gameObjects, j);
 					if(gameObject2->type == 1){
 						if(RectContains(GetGlobalBounds(gameObject2), gameObject->position)){
@@ -117,14 +118,16 @@ int main(){
 							int k;
 							for(k = 0; k < VectorTotal(&gameObject2->childs); k++){
 								GameObject* child = VectorGet(&gameObject2->childs, k);
-								child->acceleration.y = 5;
+								child->acceleration.y = 4;
 							}
 							GameObject* wheel1 = CreateGameObject(&wheelImage);
 							GameObject* wheel2 = CreateGameObject(&wheelImage);
 							wheel1->position = gameObject2->position;
 							wheel2->position = gameObject2->position;
-							wheel1->velocity.x = 10;
-							wheel2->velocity.x = -10;
+							wheel1->velocity.x = ((rand()%5) + 5);
+							wheel2->velocity.x = -((rand()%5) + 5);
+							wheel1->velocity.y = ((rand()%3) - 1);
+							wheel2->velocity.y = ((rand()%3) - 1);
 							wheel1->type = 4;
 							wheel2->type = 4;
 							wheel1->scale = gameObject2->scale;
