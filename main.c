@@ -46,6 +46,9 @@ int main(){
 	
 	//Propeller vars
 	int propeller_rot = 0;
+	int propeller_rot_delta = 35;
+	int propeller_x_delta = 30;
+	int propeller_y_delta = 30;
 	float propeller_scale = 1.0;
 	
 	//Missile Variable
@@ -68,11 +71,6 @@ int main(){
 		else if (rot_max - rot > 97){
 			rot_offset *=  -1;
 		}
-
-		propeller_rot+=35;
-		propeller_rot %= 360;
-		propeller_scale += 0.03;
-		
 		
 		DrawImage(width/2, height/2, &backgroundImage, 1.0f, 0);
 		DrawImage(300,y_parachute += y_parachute_offset, &parachuteImage, 0.5f, rot);
@@ -83,15 +81,28 @@ int main(){
 		if(!isPlaneFall){
 			DrawImage(plane_x, plane_y, &planeImage, plane_scale, plane_rot);
 			plane_scale += 0.03;
+
+			propeller_rot+=propeller_rot_delta;
+			propeller_rot %= 360;
+			propeller_scale += 0.03;
+
+			//draw propeller
+			DrawImage(width/2, height/2, &propellerImage, propeller_scale, propeller_rot);
 		}
 		else{
 			DrawImage(plane_x, plane_y, &planeImage, plane_scale, plane_rot);
 			plane_y += 8;
 			plane_rot = (plane_rot + 2) % 360;
+
+			if (propeller_rot_delta) propeller_rot_delta-=1;
+			propeller_rot+=propeller_rot_delta;
+			propeller_rot %= 360;
+			propeller_x_delta+=6;
+			propeller_y_delta+=6;
+
+			//draw propeller
+			DrawImage(plane_x + propeller_x_delta, plane_y + propeller_y_delta, &propellerImage, propeller_scale, propeller_rot);
 		}
-		
-		//draw propeller
-		DrawImage(width/2, height/2, &propellerImage, propeller_scale, propeller_rot);
 		
 		if (missile_launched == 1){
 			DrawImage(missile_x += missile_rot,missile_y -= missile_offset, &rocketImage, 1.0f, missile_rot);			
