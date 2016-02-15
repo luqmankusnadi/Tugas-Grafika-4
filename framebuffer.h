@@ -29,6 +29,7 @@ void CloseFramebuffer();
 void ClearScreen();
 void SetPixel(int x, int y, Color32 color);
 void DrawLine(int x0, int y0, int x1, int y1, Color32 color);
+void DrawRect(Rect rect, Color32 color);
 void DrawImage(int x, int y, const Image *image, float scale, float rotation);
 void DrawGameObject(const GameObject* go);
 /*

@@ -58,8 +58,8 @@ void ClearScreen(){
 
 void SetPixel(int x, int y, Color32 color){
 	long int location = 0;
-	location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+vinfo.yoffset) * finfo.line_length;
-	if(location >= 0 && location < screensize && color.a != 0){
+	if(color.a != 0 && x >= 0 && x < vinfo.xres && y >= 0 && y < vinfo.yres){
+		location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+vinfo.yoffset) * finfo.line_length;
 		*((uint32_t*)(bbp + location)) = (color.r<<vinfo.red.offset) | (color.g<<vinfo.green.offset) | (color.b<<vinfo.blue.offset);
 	} else {
 		//Out of bound
@@ -79,6 +79,13 @@ void DrawLine(int x0, int y0, int x1, int y1, Color32 color) {
       if (e2 >-dx) { err -= dy; x0 += sx; }
       if (e2 < dy) { err += dx; y0 += sy; }
   }
+}
+
+void DrawRect(Rect rect, Color32 color){
+	DrawLine(rect.x, rect.y, rect.x, rect.y + rect.h, color);
+	DrawLine(rect.x+rect.w, rect.y, rect.x+rect.w, rect.y + rect.h, color);
+	DrawLine(rect.x, rect.y, rect.x+rect.w, rect.y, color);
+	DrawLine(rect.x, rect.y+rect.h, rect.x+rect.w, rect.y + rect.h, color);
 }
 
 void DrawImage(int x, int y, const Image *image, float scale, float rotation){
@@ -107,7 +114,19 @@ void DrawImage(int x, int y, const Image *image, float scale, float rotation){
 }
 
 void DrawGameObject(const GameObject* go){
-	DrawImage(go->position.x, go->position.y, go->image, go->scale, go->rotation);
+	if(go->parent != NULL){
+		float PI = 3.14159265;
+		float rad = go->parent->rotation * PI / 180.0f;
+		DrawImage(
+			go->parent->position.x + (int)((float)go->position.x * cos(rad) - (float)go->position.y * sin(rad)), 
+			go->parent->position.y + (int)((float)go->position.x * sin(rad) + (float)go->position.y * cos(rad)), 
+			go->image, 
+			go->parent->scale * go->scale,  
+			go->parent->rotation + go->rotation 
+		);
+	} else {
+		DrawImage(go->position.x, go->position.y, go->image, go->scale, go->rotation);
+	}
 }
 
 

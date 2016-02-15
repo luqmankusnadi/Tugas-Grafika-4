@@ -6,4 +6,9 @@ typedef struct {
 	int y;
 } Point;
 
+typedef struct {
+	float x;
+	float y;
+} Pointf;
+
 #endif

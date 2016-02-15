@@ -10,6 +10,7 @@ typedef struct {
 	int h;
 } Rect;
 
-void CreateSprite(const Image* image, int w, int h);
+int RectContains(Rect rect, Point point);
+int RectOverlaps(Rect rect1, Rect rect2);
 
 #endif

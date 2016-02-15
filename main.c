@@ -3,8 +3,12 @@
 #include <time.h>
 
 #include "framebuffer.h"
+#include "image.h"
+#include "gameobject.h"
 #include "bitmap.h"
 #include "input.h"
+#include "vector.h"
+#include "timer.h"
 
 
 //Function untuk missile
@@ -15,6 +19,11 @@ int missile_finished_launched(int x,int y,int width_background){
 //screen size
 long int width, height;
 
+float ToRadians(float degrees){
+	float PI = 3.14159265;
+	return degrees * PI / 180.0f;
+}
+
 int main(){	
 	InitFramebuffer(&width, &height);
 	// Image spaceshipImage = LoadBitmapAsImage("spaceship.bmp");
@@ -22,45 +31,26 @@ int main(){
 	parachuteImage.pivot.y = 0;
 	Image backgroundImage = LoadBitmapAsImage("background.bmp");
 	Image rocketImage = LoadBitmapAsImage("rocket.bmp");
-	Image missileImage = LoadBitmapAsImage("rocket.bmp");
 	Image planeImage = LoadBitmapAsImage("plane.bmp");
 	Image propellerImage = LoadBitmapAsImage("propeller.bmp");
+	Image wheelImage = LoadBitmapAsImage("wheel.bmp");
+	
+	Vector gameObjects;
+	VectorInit(&gameObjects);
 
-	int rot = 0;
-	int rocket_rot=0;
-	int missile_rot = 0;
-	int rot_offset = 6;
-	int rocket_offset = 6;
-	int rot_max = 50;
-	int y_parachute = 300;
-	int y_parachute2 = 300;
-	int y_parachute_offset = 10;
+	GameObject* cannon = CreateGameObject(&rocketImage);
+	cannon->position = (Point){width/2, height};
+	VectorAdd(&gameObjects, cannon);
+	
+	set_conio_terminal_mode();
 	int i;
 	
-	//Plane vars
-	int plane_x = width/2 -20;
-	int plane_y = height/2 -35;
-	float plane_scale = 1.0;
-	int plane_rot = 0;
-	int isPlaneFall = 0;
+	int rot = 0;
+	int rot_offset = 6;
+	int rot_max = 50;
 	
-	//Propeller vars
-	int propeller_rot = 0;
-	float propeller_scale = 1.0;
-	
-	//Missile Variable
-	int missile_launched = 0;
-	int missile_offset = 15;
-	int missile_x = backgroundImage.w/2;
-	int missile_y = backgroundImage.h;
-	float missile_scale = 0;
-	int missile_rotation = 0;
-
-	set_conio_terminal_mode();
-
-	for(i=0; i < 10000; i++){
-		ClearScreen();
-		
+	StartTimer();
+	while(1){
 		rot = ((rot + rot_offset)% rot_max);
 		if (rot_max - rot < 3){
 			rot_offset *=  -1;
@@ -68,74 +58,126 @@ int main(){
 		else if (rot_max - rot > 97){
 			rot_offset *=  -1;
 		}
-
-		propeller_rot+=35;
-		propeller_rot %= 360;
-		propeller_scale += 0.03;
-		
-		
-		DrawImage(width/2, height/2, &backgroundImage, 1.0f, 0);
-		DrawImage(300,y_parachute += y_parachute_offset, &parachuteImage, 0.5f, rot);
-		DrawImage(backgroundImage.w/2, backgroundImage.h, &rocketImage, 1.0f, rocket_rot);
-		if(i>20)
-			isPlaneFall = 1;
-		//draw plane
-		if(!isPlaneFall){
-			DrawImage(plane_x, plane_y, &planeImage, plane_scale, plane_rot);
-			plane_scale += 0.03;
-		}
-		else{
-			DrawImage(plane_x, plane_y, &planeImage, plane_scale, plane_rot);
-			plane_y += 8;
-			plane_rot = (plane_rot + 2) % 360;
-		}
-		
-		//draw propeller
-		DrawImage(width/2, height/2, &propellerImage, propeller_scale, propeller_rot);
-		
-		if (missile_launched == 1){
-			DrawImage(missile_x += missile_rot,missile_y -= missile_offset, &rocketImage, 1.0f, missile_rot);			
-		}
-		if (missile_finished_launched(missile_x,missile_y,backgroundImage.w) ){
-			missile_x = backgroundImage.w/2;
-			missile_y = backgroundImage.h;
-			missile_launched = 0;
-			missile_rot = rocket_rot;
-		}
-
-		DrawLine(0,0, 700, 600, (Color32){255,0,0,255});
+		if(rand() % 50 == 0){
+			GameObject *plane = CreateGameObject(&planeImage);
+			GameObject *propeller = CreateGameObject(&propellerImage);
+			plane->position.x = width;
+			plane->position.y = 100;
+			plane->type = 1;
+			SetParent(propeller, plane);
+			plane->velocity.x = (-(rand() % 5))-5;
+			plane->velocity.y = (rand() % 3);
+			plane->scalingRate = 0.01;
+			propeller->angularVelocity = 30;
+			VectorAdd(&gameObjects, plane);
+			VectorAdd(&gameObjects, propeller);
+		} 
 		if(kbhit()){
 			char c = getch();
 			if(c == 'a'){
-				if (rot_max - rocket_rot < 3){
-				}
-				else{
-					rocket_rot = ((rocket_rot - rocket_offset)% rot_max);
-				}
-
+				cannon->rotation -= 10;
 			} 
 			else if(c == 'd'){
-				printf("Kanan");
-				printf("%d", rocket_rot);
-				if (rot_max - rocket_rot > 97){
-				}else{
-					rocket_rot = ((rocket_rot + rocket_offset)% rot_max);
-				}
-
+				cannon->rotation += 10;
 			}
 			else if(c == 'z'){
-				missile_launched = 1;
+				GameObject *missile = CreateGameObject(&rocketImage);
+				missile->position = cannon->position;
+				missile->velocity.x = (10.0f*sin(ToRadians(cannon->rotation)));
+				missile->velocity.y = -(10.0f*cos(ToRadians(cannon->rotation)));
+				missile->type = 2;
+				missile->rotation = cannon->rotation;
+				VectorAdd(&gameObjects, missile);
+			}
+			else if(c =='v'){
+
 			}
 
 			else if (c == 'x'){
 				break;
 			}
+			
 		}
+		for(i = 0; i < VectorTotal(&gameObjects); i++){
+			GameObject* gameObject = VectorGet(&gameObjects, i);
+			if(gameObject->type == 2){
+				int j;
+				for(j = 0; j < VectorTotal(&gameObjects); j++){
+					GameObject* gameObject2 = VectorGet(&gameObjects, j);
+					if(gameObject2->type == 1){
+						if(RectContains(GetGlobalBounds(gameObject2), gameObject->position)){
+							
+							GameObject* parachute = CreateGameObject(&parachuteImage);
+							parachute->position = gameObject2->position;
+							parachute->velocity.y = 5;
+							parachute->scale = gameObject2->scale/2;
+							parachute->type = 3;
+							gameObject2->type = 999;
+							gameObject->type = 999;
+							VectorAdd(&gameObjects, parachute);
+							int k;
+							for(k = 0; k < VectorTotal(&gameObject2->childs); k++){
+								GameObject* child = VectorGet(&gameObject2->childs, k);
+								child->acceleration.y = 5;
+							}
+							GameObject* wheel1 = CreateGameObject(&wheelImage);
+							GameObject* wheel2 = CreateGameObject(&wheelImage);
+							wheel1->position = gameObject2->position;
+							wheel2->position = gameObject2->position;
+							wheel1->velocity.x = 10;
+							wheel2->velocity.x = -10;
+							wheel1->type = 4;
+							wheel2->type = 4;
+							wheel1->scale = gameObject2->scale;
+							wheel2->scale = gameObject2->scale;
+							wheel1->acceleration.y = 4;
+							wheel2->acceleration.y = 4;
+							VectorAdd(&gameObjects, wheel1);
+							VectorAdd(&gameObjects, wheel2);
+							DetachAllChilds(gameObject);
+							DetachParent(gameObject);
+						}
+					}
+				}
+			}
+			//printf("%d ", gameObject->position.x);
+		}
+		ClearScreen();
+		DrawImage(width/2, height/2, &backgroundImage, 1.0f, 0);
+		for(i = 0; i < VectorTotal(&gameObjects); i++){
+			GameObject* gameObject = VectorGet(&gameObjects, i);
+			UpdateGameObject(gameObject);
+			Rect boundary = (Rect){-100, -100, width+200, height+200};
+			if(!RectContains(boundary, gameObject->position)){
+				gameObject->type = 999;
+			}
+			if(gameObject->type == 3){
+				gameObject->rotation = rot;
+			} else if (gameObject->type == 4){
+				if(gameObject->position.y > height) 
+					gameObject->velocity.y = -gameObject->velocity.y * 0.8;
+			}
+			DrawGameObject(gameObject);
+		}
+		
 		SwapBuffers();
+		for(i = 0; i < VectorTotal(&gameObjects); i++){
+			GameObject* gameObject = VectorGet(&gameObjects, i);
+			if(gameObject->type == 999){
+				VectorDelete(&gameObjects, i);
+				free(gameObject);
+				i--;
+			}
+		}
+
 		usleep(33333);
 	}
-	
-	//free image
+	for(i = 0; i < VectorTotal(&gameObjects); i++){
+		GameObject* gameObject = VectorGet(&gameObjects, i);
+		
+		VectorDelete(&gameObjects, i);
+		free(gameObject);
+	}
 	FreeImage(&parachuteImage);
 	FreeImage(&backgroundImage);
 	FreeImage(&planeImage);
