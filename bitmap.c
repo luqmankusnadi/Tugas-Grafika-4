@@ -75,10 +75,10 @@ Image LoadBitmapAsImage(char *filename){
 			color.r = bitmapFile.data[p];
 			color.g = bitmapFile.data[p+1];
 			color.b = bitmapFile.data[p+2];
-			if(color.r != 0 && color.g != 0 && color.b != 0)
-				color.a = 255;
-			else
+			if(color.r == 0 && color.g == 0 && color.b == 0)
 				color.a = 0;
+			else
+				color.a = 255;
 			image.pixels[image.h-j-1][i] = color;
 		}
 	}

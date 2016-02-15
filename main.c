@@ -8,8 +8,6 @@
 #include "bitmap.h"
 #include "input.h"
 #include "vector.h"
-#include "timer.h"
-
 
 //Function untuk missile
 int missile_finished_launched(int x,int y,int width_background){	
@@ -49,8 +47,9 @@ int main(){
 	int rot_offset = 6;
 	int rot_max = 50;
 	
-	StartTimer();
 	while(1){
+		ClearScreen();
+	
 		rot = ((rot + rot_offset)% rot_max);
 		if (rot_max - rot < 3){
 			rot_offset *=  -1;
@@ -75,12 +74,14 @@ int main(){
 		if(kbhit()){
 			char c = getch();
 			if(c == 'a'){
+				if(cannon->rotation > - 80)
 				cannon->rotation -= 10;
 			} 
 			else if(c == 'd'){
+				if(cannon->rotation <  80)
 				cannon->rotation += 10;
 			}
-			else if(c == 'z'){
+			else if(c == 'g'){
 				GameObject *missile = CreateGameObject(&rocketImage);
 				missile->position = cannon->position;
 				missile->velocity.x = (10.0f*sin(ToRadians(cannon->rotation)));
@@ -89,9 +90,7 @@ int main(){
 				missile->rotation = cannon->rotation;
 				VectorAdd(&gameObjects, missile);
 			}
-			else if(c =='v'){
-
-			}
+	
 
 			else if (c == 'x'){
 				break;
@@ -178,10 +177,12 @@ int main(){
 		VectorDelete(&gameObjects, i);
 		free(gameObject);
 	}
+	VectorFree(&gameObjects);
 	FreeImage(&parachuteImage);
 	FreeImage(&backgroundImage);
 	FreeImage(&planeImage);
 	FreeImage(&propellerImage);
+	FreeImage(&wheelImage);
 	CloseFramebuffer();
 	return 0;
 }
